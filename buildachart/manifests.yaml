@@ -1,0 +1,82 @@
+---
+# Source: buildachart/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cherrybomb
+  labels:
+
+    helm.sh/chart: buildachart-0.1.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: buildachart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cherry-chart
+  labels:
+    helm.sh/chart: buildachart-0.1.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: RELEASE-NAME
+---
+# Source: buildachart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cherry-chart
+  labels:
+    helm.sh/chart: buildachart-0.1.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cherry-awesome-app
+      app.kubernetes.io/instance: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cherry-awesome-app
+        app.kubernetes.io/instance: RELEASE-NAME
+    spec:
+      serviceAccountName: cherrybomb
+      securityContext:
+        {}
+      containers:
+        - name: buildachart
+          securityContext:
+            {}
+          image: "nginx:1.16.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            null
