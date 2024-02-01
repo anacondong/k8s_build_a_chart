@@ -26,7 +26,7 @@ kubectl apply -f ./buildachart/manifests.yaml
 
 # Verify Apply
 
-kubectl get pods,svc,deployments
+kubectl get pods,svc,deployments,secrets,configMap
 
 # Forward port (enter http://localhost)
 kubectl port-forward pod/cherry-chart-6ffb89668d-mwksb 80:80
