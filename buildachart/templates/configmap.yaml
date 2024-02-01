@@ -1,0 +1,9 @@
+# File: configmap.yaml
+{{- range .Values.configMaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+data:
+{{ toYaml .data | indent 2 }}
+{{- end }}

@@ -12,6 +12,34 @@ metadata:
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
 ---
+# Source: buildachart/templates/secret.yaml
+# File: secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-secret
+type: Opaque
+data:
+  password: c2VjcmV0cGFzc3dvcmQ=
+  username: YWRtaW4=
+---
+# Source: buildachart/templates/configmap.yaml
+# File: configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: basic-config
+data:
+  key1: v1
+  key2: v2
+  key3: v3
+  key4: v4
+  key5: v5
+  key6: v6
+  key7: v7
+  key8: v8
+  key9: v9
+---
 # Source: buildachart/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -78,5 +106,33 @@ spec:
             httpGet:
               path: /
               port: http
+          env:
+          - name: key1
+            value: "v1"
+          - name: key2
+            value: "v2"
+          - name: key3
+            value: "v3"
+          - name: key4
+            value: "v4"
+          - name: key5
+            value: "v5"
+          - name: key6
+            value: "v6"
+          - name: key7
+            value: "v7"
+          - name: key8
+            value: "v8"
+          - name: key9
+            value: "v9"
+          - name: password
+            value: "c2VjcmV0cGFzc3dvcmQ="
+          - name: username
+            value: "YWRtaW4="
           resources:
-            null
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
